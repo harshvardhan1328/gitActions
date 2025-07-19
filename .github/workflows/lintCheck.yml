@@ -1,39 +1,25 @@
-name: ✅ Lint on Push (Catch Unused Vars)
+name: Lint on Push
 
 on:
   push:
     branches:
-      - '**'  # Runs on any branch push
+      - '**'  # Run on any branch push
 
 jobs:
   lint:
-    name: 🔍 Lint changed JS files
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 2  # For git diff HEAD^ HEAD
 
-      - name: 📦 Setup Node.js
+      - name: Setup Node.js environment
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
+          node-version: 18
 
-      - name: 📥 Install ESLint
-        run: |
-          npm init -y
-          npm install --save-dev eslint
+      - name: Install dependencies
+        run: npm ci
 
-      - name: 🧪 Run ESLint on changed JavaScript files
-        shell: bash
-        run: |
-          FILES=$(git diff --name-only HEAD^ HEAD -- '*.js')
-          if [ -z "$FILES" ]; then
-            echo "✅ No JS files changed. Skipping lint."
-          else
-            echo "🔍 Linting files:"
-            echo "$FILES"
-            npx eslint $FILES || exit 1
-          fi
+      - name: Run ESLint (npm lint script)
+        run: npm run lint
