@@ -1,39 +1,41 @@
-name: 🚀 Free Lint Check on Commit
+name: ✅ Lint on Push (Free Optimized)
 
 on:
   push:
     branches:
-      - '**'  # Trigger on any branch push
+      - '**'  # Trigger on push to any branch
 
 jobs:
   lint:
-    name: 🔍 Lint on Ubuntu
-    runs-on: ubuntu-latest  # ✅ Free runner
+    name: 🔍 Lint Changed JS Files
+    runs-on: ubuntu-latest  # ✅ Free runner on all GitHub plans
 
     steps:
       - name: 📥 Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2  # ✅ Just enough history for git diff
+          fetch-depth: 2  # ✅ Needed to compare last 2 commits (HEAD and HEAD^)
 
-      - name: 📦 Setup Node.js
+      - name: 📦 Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'  # ✅ LTS version, fast and stable
+          node-version: '18'  # ✅ Use LTS version (can change to 20 if preferred)
 
-      - name: 📥 Install ESLint only
+      - name: 📦 Install ESLint only (lean setup)
         run: |
           npm init -y
           npm install --save-dev eslint
 
-      - name: 🧪 Run ESLint on changed JS files
+      - name: 🧪 Run ESLint on changed JavaScript files
         shell: bash
         run: |
+          echo "🔍 Finding changed JS files in last commit..."
           FILES=$(git diff --name-only HEAD^ HEAD -- '*.js')
+
           if [ -z "$FILES" ]; then
-            echo "✅ No JavaScript files changed. Skipping lint."
+            echo "✅ No changed JS files. Skipping lint."
           else
-            echo "🔍 Linting changed files:"
+            echo "🔎 Linting files:"
             echo "$FILES"
             npx eslint $FILES || exit 1
           fi
