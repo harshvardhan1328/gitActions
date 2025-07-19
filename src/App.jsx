@@ -5,7 +5,8 @@ import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-const Heading="Heading"
+const Heading="Heading";
+const secondHeading="second";
   return (
     <>
       <div>
